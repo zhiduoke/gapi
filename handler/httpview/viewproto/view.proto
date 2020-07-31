@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package gapi.handler.httpview;
+
+option go_package = "viewproto";
+
+message HttpRequest {
+    string method = 1;
+    string query = 2;
+    map<string, string> headers = 3;
+    bytes body = 4;
+}
+
+message HttpResponse {
+    int32 status = 1;
+    map<string, string> headers = 2;
+    bytes body = 3;
+}

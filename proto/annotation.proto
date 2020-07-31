@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+import "google/protobuf/descriptor.proto";
+
+package gapi;
+
+option go_package = "github.com/zhiduoke/gapi/proto";
+
+extend google.protobuf.MethodOptions {
+    Http http = 3110202;
+}
+
+message Http {
+    oneof pattern {
+        string post = 1;
+        string get = 2;
+        string delete = 3;
+        string put = 4;
+        string patch = 5;
+        string option = 6;
+    }
+    repeated string use = 7;
+    int32 timeout = 8;
+    string handler = 9;
+}
+
+extend google.protobuf.ServiceOptions {
+    string server = 4110202;
+    string default_handler = 4110204;
+    int32 default_timeout = 4110205;
+    string path_prefix = 4110206;
+}
+
+extend google.protobuf.MessageOptions {
+    bool flat = 5110202;
+}
+
+enum FIELD_BIND {
+    FROM_DEFAULT = 0;
+    FROM_CONTEXT = 1;
+    FROM_QUERY = 2;
+    FROM_HEADER = 3;
+    FROM_PARAMS = 4;
+}
+
+extend google.protobuf.FieldOptions {
+    string alias = 6110202;
+    bool omit_empty = 6110203;
+    bool raw_data = 6110204;
+    bool from_context = 6110206;
+    bool validate = 6110207;
+    FIELD_BIND bind = 6110209;
+}

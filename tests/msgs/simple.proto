@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package tests.msgs;
+
+option go_package = ".;msgs";
+
+message SimpleMessage1 {
+    int32 a = 1;
+    int32 b = 2;
+    string c = 3;
+}

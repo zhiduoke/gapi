@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+package tests.msgs;
+
+option go_package = ".;msgs";
+
+import "proto/annotation.proto";
+
+/*
+https://www.json-generator.com/
+
+{
+  msgs: [
+    '{{repeat(5, 7)}}',
+    {
+      id: '{{objectId()}}',
+      index: '{{index()}}',
+      guid: '{{guid()}}',
+      isActive: '{{bool()}}',
+      balance: '{{floating(1000, 4000, 2, "$0,0.00")}}',
+      picture: 'http://placehold.it/32x32',
+      age: '{{integer(20, 40)}}',
+      eyeColor: '{{random("blue", "brown", "green")}}',
+      name: '{{firstName()}} {{surname()}}',
+      gender: '{{gender()}}',
+      company: '{{company().toUpperCase()}}',
+      email: '{{email()}}',
+      phone: '+1 {{phone()}}',
+      address: '{{integer(100, 999)}} {{street()}}, {{city()}}, {{state()}}, {{integer(100, 10000)}}',
+      about: '{{lorem(1, "paragraphs")}}',
+      registered: '{{date(new Date(2014, 0, 1), new Date(), "YYYY-MM-ddThh:mm:ss Z")}}',
+      latitude: '{{floating(-90.000001, 90)}}',
+      longitude: '{{floating(-180.000001, 180)}}',
+      tags: [
+        '{{repeat(7)}}',
+        '{{lorem(1, "words")}}'
+      ],
+      friends: [
+        '{{repeat(3)}}',
+        {
+          id: '{{index()}}',
+          name: '{{firstName()}} {{surname()}}'
+        }
+      ],
+      greeting: function (tags) {
+        return 'Hello, ' + this.name + '! You have ' + tags.integer(1, 10) + ' unread messages.';
+      },
+      favoriteFruit: function (tags) {
+        var fruits = ['apple', 'banana', 'strawberry'];
+        return fruits[tags.integer(0, fruits.length - 1)];
+      }
+    }
+  ]
+}
+*/
+
+message BenchFriend {
+    int64 id = 1;
+    string name = 2;
+}
+
+message BenchMessage {
+    string _id = 1;
+    int64 index = 2;
+    string guid = 3;
+    bool isActive = 4;
+    string balance = 5;
+    string picture = 6;
+    int64 age = 7;
+    string eyeColor = 8;
+    string name = 9;
+    string gender = 10;
+    string company = 11;
+    string email = 12;
+    string phone = 13;
+    string address = 14;
+    string about = 15;
+    string registered = 16;
+    double latitude = 17;
+    double longitude = 18;
+    repeated string tags = 19;
+    repeated BenchFriend friends = 20;
+    string greeting = 21;
+    string favoriteFruit = 22;
+}
+
+message BenchArgs {
+}
+
+message BenchReply {
+    repeated BenchMessage msgs = 1;
+}
+
+service BenchService {
+    option (gapi.server) = "bench";
+
+    rpc Test (BenchArgs) returns (BenchReply) {
+        option (gapi.http) = {
+            post: "/bench/test"
+        };
+    }
+}

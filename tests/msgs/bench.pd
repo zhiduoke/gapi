@@ -1,0 +1,41 @@
+
+õ
+bench.proto
+tests.msgsproto/annotation.proto"1
+BenchFriend
+id (Rid
+name (	Rname"Ì
+BenchMessage
+_id (	RId
+index (Rindex
+guid (	Rguid
+isActive (RisActive
+balance (	Rbalance
+picture (	Rpicture
+age (Rage
+eyeColor (	ReyeColor
+name	 (	Rname
+gender
+ (	Rgender
+company (	Rcompany
+email (	Remail
+phone (	Rphone
+address (	Raddress
+about (	Rabout
+
+registered (	R
+registered
+latitude (Rlatitude
+	longitude (R	longitude
+tags (	Rtags1
+friends (2.tests.msgs.BenchFriendRfriends
+greeting (	Rgreeting$
+favoriteFruit (	RfavoriteFruit"
+	BenchArgs":
+
+BenchReply,
+msgs (2.tests.msgs.BenchMessageRmsgs2e
+BenchServiceI
+Test.tests.msgs.BenchArgs.tests.msgs.BenchReply"ÒÓî
+/bench/test
+Ò÷ÖbenchBZ.;msgsbproto3

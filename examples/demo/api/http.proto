@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package service.demo;
+
+option go_package = ".;api";
+
+import "proto/annotation.proto";
+
+service DemoAPI {
+    option (gapi.server) = "localhost:19090";
+    option (gapi.default_handler) = "httpjson";
+    option (gapi.default_timeout) = 5000;
+    option (gapi.path_prefix) = "/demo";
+
+    rpc Add (AddRequest) returns (AddReply) {
+        option (gapi.http) = {
+            post: "/add"
+            timeout: 10000
+        };
+    }
+
+    rpc Add2 (Add2Request) returns (Add2Reply) {
+        option (gapi.http) = {
+            post: "/add2"
+            use: "auth"
+        };
+    }
+
+    rpc Sub (SubReq) returns (SubResp) {
+        option (gapi.http) = {
+            post: "/sub"
+        };
+    }
+
+    rpc Sub2 (SubReq2) returns (SubResp2) {
+        option (gapi.http) = {
+            post: "/sub2"
+        };
+    }
+}
+
+message AddRequest {
+    int32 a = 1;
+    int32 b = 2;
+}
+
+message AddReply {
+    int32 sum = 1;
+    EnumTyp e = 2;
+    Nest f = 3;
+}
+
+message Add2Request {
+    int32 a = 1 [(gapi.validate) = true];
+    int32 b = 2 [(gapi.validate) = true];
+    string userId = 3 [(gapi.alias) = "uid", (gapi.bind) = FROM_CONTEXT];
+}
+
+message Add2Reply {
+    int32 sum = 1 [(gapi.omit_empty) = true];
+    string uid = 2 [(gapi.alias) = "user_id"];
+}
+
+enum EnumTyp {
+    m = 0;
+    n = 1;
+}
+
+message Nest {
+    int64 a = 1;
+    Nest b = 2;
+    message NestMsg {
+        Nest c = 1;
+    }
+    Nest.NestMsg d = 3;
+    enum NestEnum {
+        i = 0;
+        j = 1;
+    }
+    Nest.NestEnum e = 4;
+}
+
+message SubReq {
+    int32 a = 1;
+    int32 b = 2;
+}
+
+message SubResp {
+    int32 result = 1;
+}
+
+message SubReq2 {
+    int32 a = 1;
+    int32 b = 2;
+}
+
+message SubResp2 {
+    int32 result = 1;
+}
