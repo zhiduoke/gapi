@@ -60,10 +60,11 @@ type MessageOptions struct {
 }
 
 type Message struct {
-	Name     string
-	Fields   []*Field
-	tagIndex []int
-	Options  MessageOptions
+	Name      string
+	Fields    []*Field
+	tagIndex  []int
+	nameField []*Field
+	Options   MessageOptions
 }
 
 func (m *Message) BakeTagIndex() {
@@ -123,6 +124,35 @@ func (m *Message) TagIndex(tag int) int {
 		}
 	}
 	return -1
+}
+
+func (m *Message) BakeNameField() {
+	if len(m.Fields) == 0 {
+		return
+	}
+	fields := m.Fields
+	nameField := make([]*Field, len(fields))
+	copy(nameField, fields)
+	sort.Slice(nameField, func(i, j int) bool {
+		return nameField[i].Name < nameField[j].Name
+	})
+	m.nameField = nameField
+}
+
+func (m *Message) GetField(fieldName string) *Field {
+	l, r := 0, len(m.nameField)-1
+	for l <= r {
+		mid := (l + r) / 2
+		field := m.nameField[mid]
+		if field.Name == fieldName {
+			return field
+		} else if field.Name > fieldName {
+			r = mid - 1
+		} else {
+			l = mid + 1
+		}
+	}
+	return nil
 }
 
 type Call struct {

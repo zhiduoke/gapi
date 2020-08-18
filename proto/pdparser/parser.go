@@ -285,6 +285,7 @@ func (p *Parser) parseMessage(md *descriptor.DescriptorProto) error {
 
 	msg.Fields = fields
 	msg.BakeTagIndex()
+	msg.BakeNameField()
 
 	if fn := p.extraHandler; fn != nil {
 		fn(msg, md)
