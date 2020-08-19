@@ -168,7 +168,7 @@ func (e *Encoder) transString(token *Token, field *metadata.Field) {
 	e.encodeBytes(field.Tag, pv)
 }
 
-func (e *Encoder) transObjectAsMap(token *Token, field *metadata.Field) {
+func (e *Encoder) transObjectAsMap(_ *Token, field *metadata.Field) {
 	msg := field.Message
 	if len(msg.Fields) != 2 {
 		e.err = errors.New("invalid metadata: map type error")
@@ -185,15 +185,15 @@ KvEncode:
 		kvEnc.reset(e.iter)
 		for i := 0; i < 2; i++ {
 			field := kvField[i]
-			tk := kvEnc.transValue(field)
-			if tk == nil {
+			kind, ok := kvEnc.transValue(field)
+			if !ok {
 				break KvEncode
 			}
-			if tk.Kind == ObjectEnd {
+			if kind == ObjectEnd {
 				done = true
 				break KvEncode
 			}
-			if !isValueToken(tk) {
+			if !isValueToken(kind) {
 				i--
 			}
 		}
@@ -282,7 +282,7 @@ func (e *Encoder) transObject(token *Token, field *metadata.Field) {
 	}
 }
 
-func (e *Encoder) packNumeric(token *Token, field *metadata.Field) {
+func (e *Encoder) packNumeric(_ *Token, field *metadata.Field) {
 	packEnc := newEncoder()
 	packEnc.reset(e.iter)
 	for packEnc.iter.Next() {
@@ -320,16 +320,16 @@ func (e *Encoder) transArray(token *Token, field *metadata.Field) {
 	}
 
 	for {
-		tk := e.transValue(field)
-		if tk == nil || tk.Kind == ArrayEnd || tk.Kind == Invalid {
+		kind, ok := e.transValue(field)
+		if !ok || kind == ArrayEnd || kind == Invalid {
 			break
 		}
 	}
 }
 
-func (e *Encoder) transValue(filed *metadata.Field) *Token {
+func (e *Encoder) transValue(filed *metadata.Field) (TokenKind, bool) {
 	if !e.iter.Next() || e.err != nil {
-		return nil
+		return Invalid, false
 	}
 	token := e.iter.Consume()
 	switch token.Kind {
@@ -351,11 +351,13 @@ func (e *Encoder) transValue(filed *metadata.Field) *Token {
 	default:
 		e.setErrorInvalidJsonToken(token, nil)
 	}
+	kind := token.Kind
 	token.PutBack()
-	return token
+	return kind, e.err == nil
 }
 
 func (e *Encoder) unquoteString(data []byte) ([]byte, bool) {
+	// TODO:(thewinds)
 	return data[1 : len(data)-1], true
 }
 

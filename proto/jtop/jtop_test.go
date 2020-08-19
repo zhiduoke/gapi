@@ -80,7 +80,7 @@ func TestEncode(t *testing.T) {
 	}
 }
 
-func BenchmarkEncode(b *testing.B) {
+func Benchmark_JTOPEncode(b *testing.B) {
 	jsonData, _ := json.Marshal(objectReq)
 	msg := testdata.TestMessages[".jtop.test.ObjectReq"]
 	for i := 0; i < b.N; i++ {
@@ -89,8 +89,11 @@ func BenchmarkEncode(b *testing.B) {
 }
 
 func Benchmark_ProtoEncode(b *testing.B) {
-	msg := proto.MessageV1(objectReq.ProtoReflect())
+	jsonData, _ := json.Marshal(objectReq)
+	o := new(testdata.ObjectReq)
 	for i := 0; i < b.N; i++ {
+		json.Unmarshal(jsonData, o)
+		msg := proto.MessageV1(o.ProtoReflect())
 		proto.Marshal(msg)
 	}
 }

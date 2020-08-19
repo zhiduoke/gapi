@@ -32,8 +32,8 @@ func fieldNullable(filed *metadata.Field) bool {
 		filed.Kind == metadata.MessageKind
 }
 
-func isValueToken(token *Token) bool {
-	switch token.Kind {
+func isValueToken(kind TokenKind) bool {
+	switch kind {
 	case Null, True, False, Number, String, ObjectBegin, ArrayBegin:
 		return true
 	default:
