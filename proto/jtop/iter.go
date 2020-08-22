@@ -2,7 +2,6 @@ package jtop
 
 import (
 	"fmt"
-	"sync"
 )
 
 type TokenKind uint8
@@ -42,30 +41,15 @@ type Token struct {
 	Value []byte
 }
 
-var tokenPool sync.Pool
-
-func newToken(kind TokenKind, val []byte) *Token {
-	v := tokenPool.Get()
-	if v == nil {
-		return &Token{Kind: kind, Value: val}
-	}
-	token := v.(*Token)
-	token.Kind = kind
-	token.Value = val
-	return token
-}
-
 func (t *Token) String() string {
 	return fmt.Sprintf("Kind: [%s],Value:[%s]", tokenMap[t.Kind], t.Value)
 }
 
-func (t *Token) PutBack() {
-	tokenPool.Put(t)
-}
-
 type Iter struct {
-	pos int
-	buf []byte
+	pos     int
+	buf     []byte
+	token   Token // only hold the last token
+	topKind TokenKind
 }
 
 type iterFunc func(*Iter) *Token
@@ -95,7 +79,7 @@ var iterMatch = [...]iterFunc{
 }
 
 func NewIter(b []byte) *Iter {
-	return &Iter{pos: 0, buf: b}
+	return &Iter{pos: 0, buf: b, token: Token{Kind: Invalid}}
 }
 
 func (i *Iter) Next() bool {
@@ -108,22 +92,23 @@ func (i *Iter) Consume() *Token {
 	if fn != nil {
 		return fn(i)
 	}
-	return newToken(Invalid, i.buf[i.pos:])
+	i.token.Kind = Invalid
+	i.token.Value = i.buf[i.pos:]
+	return &i.token
 }
 
 func (i *Iter) ConsumeKind() TokenKind {
-	tk := i.Consume()
-	kind := tk.Kind
-	tk.PutBack()
-	return kind
+	return i.Consume().Kind
 }
 
-func (i *Iter) IsObject() bool {
-	i.skipWhiteSpace()
-	if i.eof() {
-		return false
+func (i *Iter) TopKind() TokenKind {
+	if i.pos != 0 {
+		return i.topKind
 	}
-	return i.buf[i.pos] == '{'
+	token := i.Consume()
+	i.topKind = token.Kind
+	i.pos = 0
+	return token.Kind
 }
 
 func (i *Iter) Bytes() []byte {
@@ -154,14 +139,20 @@ func (i *Iter) eof() bool {
 	return i.pos >= len(i.buf)
 }
 
+func (i *Iter) setToken(kind TokenKind, val []byte) *Token {
+	i.token.Kind = kind
+	i.token.Value = val
+	return &i.token
+}
+
 func makeFixedIter(kind TokenKind, size int) iterFunc {
 	return func(i *Iter) *Token {
 		if !i.request(size - 1) {
-			return newToken(Invalid, i.buf[i.pos:])
+			return i.setToken(Invalid, i.buf[i.pos:])
 		}
 		begin := i.pos
 		i.pos += size
-		return newToken(kind, i.buf[begin:i.pos])
+		return i.setToken(kind, i.buf[begin:i.pos])
 	}
 }
 
@@ -169,7 +160,7 @@ func makeFixed1Iter(kind TokenKind) iterFunc {
 	return func(i *Iter) *Token {
 		begin := i.pos
 		i.pos += 1
-		return newToken(kind, i.buf[begin:i.pos])
+		return i.setToken(kind, i.buf[begin:i.pos])
 	}
 }
 
@@ -183,7 +174,7 @@ func iterNumber(i *Iter) *Token {
 		}
 		break
 	}
-	return newToken(Number, i.buf[begin:i.pos])
+	return i.setToken(Number, i.buf[begin:i.pos])
 }
 
 func iterString(i *Iter) *Token {
@@ -193,9 +184,9 @@ func iterString(i *Iter) *Token {
 		c := i.buf[i.pos]
 		if c == '"' && i.buf[i.pos-1] != '\\' {
 			i.pos++
-			return newToken(String, i.buf[begin:i.pos])
+			return i.setToken(String, i.buf[begin:i.pos])
 		}
 		i.pos++
 	}
-	return newToken(Invalid, i.buf[begin:])
+	return i.setToken(Invalid, i.buf[begin:])
 }

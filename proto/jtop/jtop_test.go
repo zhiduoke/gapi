@@ -99,6 +99,8 @@ func Benchmark_ProtoEncode(b *testing.B) {
 }
 
 func diffbytes(t *testing.T, a, b []byte) {
+	t.Log("pb_jtop:", a)
+	t.Log("pb_prot:", b)
 	for i := 0; i < len(a) && i < len(b); i++ {
 		if a[i] != b[i] {
 			t.Log(a[:i])

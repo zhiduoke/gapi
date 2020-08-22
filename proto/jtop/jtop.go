@@ -38,20 +38,18 @@ func putEncoder(enc *Encoder) {
 
 func Encode(msg *metadata.Message, data []byte) ([]byte, error) {
 	enc := newEncoder()
+	defer putEncoder(enc)
 	iter := NewIter(data)
-	if !iter.IsObject() {
-		putEncoder(enc)
+	if iter.TopKind() != ObjectBegin {
 		return nil, errors.New("invalid json input: must be json object")
 	}
 	enc.reset(iter)
 	enc.rootField.Message = msg
 	enc.transValue(enc.rootField)
 	if enc.err != nil {
-		putEncoder(enc)
 		return nil, enc.err
 	}
 	buf := append([]byte(nil), enc.buf.Bytes()...)
-	putEncoder(enc)
 	return buf, nil
 }
 
@@ -237,33 +235,27 @@ func (e *Encoder) transObject(token *Token, field *metadata.Field) {
 		tk := objEnc.iter.Consume()
 		if tk.Kind == ObjectEnd {
 			done = true
-			tk.PutBack()
 			break
 		}
 		if tk.Kind == Comma {
-			tk.PutBack()
 			continue
 		}
 		if tk.Kind != String {
 			objEnc.setErrorInvalidJsonToken(tk, errors.New("unexpected key"))
-			tk.PutBack()
 			break
 		}
 		// read key
 		key, ok := objEnc.unquoteString(tk.Value)
 		if !ok {
 			objEnc.setErrorInvalidJsonToken(tk, errors.New("invalid string format"))
-			tk.PutBack()
 			break
 		}
 		objEnc.ignoreToken()
 		field := msg.GetField(string(key))
 		if field != nil {
 			objEnc.transValue(field)
-			tk.PutBack()
 			continue
 		}
-		tk.PutBack()
 		objEnc.ignoreValueTokens()
 	}
 	if !done && objEnc.err == nil {
@@ -288,19 +280,15 @@ func (e *Encoder) packNumeric(_ *Token, field *metadata.Field) {
 	for packEnc.iter.Next() {
 		tk := packEnc.iter.Consume()
 		if tk.Kind == ArrayEnd {
-			tk.PutBack()
 			break
 		}
 		if tk.Kind != Number && tk.Kind != True && tk.Kind != False {
-			tk.PutBack()
 			continue
 		}
 		wire, pv, ok := packEnc.parseNumber(tk, field)
 		if !ok {
-			tk.PutBack()
 			return
 		}
-		tk.PutBack()
 		packEnc.encodeWire(wire, pv)
 	}
 	e.encodeBytes(field.Tag, packEnc.buf.Bytes())
@@ -332,6 +320,7 @@ func (e *Encoder) transValue(filed *metadata.Field) (TokenKind, bool) {
 		return Invalid, false
 	}
 	token := e.iter.Consume()
+	kind := token.Kind
 	switch token.Kind {
 	case Invalid:
 		e.setErrorInvalidJsonToken(token, nil)
@@ -351,8 +340,6 @@ func (e *Encoder) transValue(filed *metadata.Field) (TokenKind, bool) {
 	default:
 		e.setErrorInvalidJsonToken(token, nil)
 	}
-	kind := token.Kind
-	token.PutBack()
 	return kind, e.err == nil
 }
 
