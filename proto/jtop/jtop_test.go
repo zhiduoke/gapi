@@ -132,7 +132,7 @@ var boolReq = testdata.BoolReq{
 }
 
 var stringReq = testdata.StringReq{
-	Str:   "",
+	Str:   "\u1234\\\u2222\t\n😪😪😪😪",
 	Bae64: []byte("hello,i am ok"),
 }
 

@@ -344,8 +344,7 @@ func (e *Encoder) transValue(filed *metadata.Field) (TokenKind, bool) {
 }
 
 func (e *Encoder) unquoteString(data []byte) ([]byte, bool) {
-	// TODO:(thewinds)
-	return data[1 : len(data)-1], true
+	return unquoteBytes(data)
 }
 
 func (e *Encoder) parseNumber(token *Token, field *metadata.Field) (wire protowire.Type, pv uint64, ok bool) {
