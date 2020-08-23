@@ -62,6 +62,7 @@ func (e *Encoder) reset(iter *Iter) {
 	if e.buf == nil {
 		e.buf = proto.NewBuffer(nil)
 	}
+	e.err = nil
 	e.buf.Reset()
 }
 
