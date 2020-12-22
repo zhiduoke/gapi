@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package jtop.test;
+
+option go_package = "testdata";
+
+import "proto/annotation.proto";
+
+service TestServer {
+    option (gapi.server) = "localhost:19090";
+    option (gapi.default_handler) = "httpjson";
+    option (gapi.default_timeout) = 5000;
+    option (gapi.path_prefix) = "/test";
+    rpc TestNumber (NumberReq) returns (Dummy) {
+        option (gapi.http) = {
+            post: "/number"
+        };
+    }
+    rpc TestString (StringReq) returns (Dummy) {
+        option (gapi.http) = {
+            post: "/string"
+        };
+    }
+    rpc TestBool (BoolReq) returns (Dummy) {
+        option (gapi.http) = {
+            post: "/bool"
+        };
+    }
+    rpc TestObject (ObjectReq) returns (Dummy) {
+        option (gapi.http) = {
+            post: "/object"
+        };
+    }
+    rpc TestMap (MapReq) returns (Dummy) {
+        option (gapi.http) = {
+            post: "/map"
+        };
+    }
+    rpc TestArray (ArrayReq) returns (Dummy) {
+        option (gapi.http) = {
+            post: "/array"
+        };
+    }
+}
+
+message Dummy {
+
+}
+
+message NumberReq {
+    int32 i32 = 1;
+    int64 i64 = 2;
+    uint32 ui32 = 3;
+    uint64 ui64 = 4;
+    sint32 si32 = 5;
+    sint64 si64 = 6;
+    float float = 7;
+    double double = 8;
+    fixed32 fix32 = 9;
+    fixed64 fix64 = 10;
+    sfixed32 sfix32 = 11;
+    sfixed64 sfix64 = 12;
+}
+
+message StringReq {
+    string str = 1;
+    bytes bae64 = 2;
+}
+
+message BoolReq {
+    bool a = 1;
+    bool b = 2;
+}
+
+message ObjectReq {
+    NumberReq num = 1;
+    StringReq str = 2;
+    BoolReq bool = 3;
+    ObjectReq obj = 4;
+    int32 a = 5;
+    bool b = 6;
+}
+
+message MapReq {
+    map<string, string> sms = 1;
+    map<string, int32> smi = 2;
+    map<bool, string> bms = 3;
+    map<string, ObjectReq> smo = 4;
+    map<int32, ObjectReq> imo = 5;
+    map<string, ArrayReq> sma = 6;
+}
+
+message ArrayReq {
+    repeated int32 nums = 1;
+    repeated string strs = 2;
+    repeated bool bools = 3;
+    repeated ObjectReq objs = 4;
+    repeated MapReq mapObjs = 5;
+}

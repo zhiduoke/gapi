@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/sirupsen/logrus"
 	"github.com/zhiduoke/gapi"
@@ -53,10 +54,18 @@ func main() {
 		ctx.Set("uid", uid)
 		return ctx.Next()
 	})
+	s.RegisterMiddleware("mock_ctx", func(ctx *gapi.Context) error {
+		ctx.Set("from_ctx", time.Now().String())
+		return ctx.Next()
+	})
 	s.RegisterHandler("httpjson", &httpjson.Handler{})
 	md, err := loadMetaddata()
 	if err != nil {
 		logrus.Fatalf("loadMetadata: %v", err)
+	}
+	logrus.Println("http server listen on :8080")
+	for _, route := range md.Routes {
+		logrus.Println(route.Method, route.Path)
 	}
 	err = s.UpdateRoute(md)
 	if err != nil {
@@ -66,4 +75,6 @@ func main() {
 	if err != nil {
 		logrus.Fatalf("serve: %v", err)
 	}
+	// a curl test
+	// curl -X POST -H 'from_header: hello' -d 'from_form=xxx' http://localhost:8080/demo/request_bind/sssdsdsd\?from_query\=222ss
 }

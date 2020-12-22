@@ -10,6 +10,16 @@ import (
 type API struct {
 }
 
+func (s *API) RequestBind(ctx context.Context, req *api.RequestBindReq) (*api.RequestBindResp, error) {
+	return &api.RequestBindResp{
+		Form:   req.FromForm,
+		Ctx:    req.FromCtx,
+		Query:  req.FromQuery,
+		Header: req.FromHeader,
+		Params: req.FromParams,
+	}, nil
+}
+
 func (s *API) Add(ctx context.Context, in *api.AddRequest) (*api.AddReply, error) {
 	logrus.Infof("Add1: %s", in)
 	return &api.AddReply{

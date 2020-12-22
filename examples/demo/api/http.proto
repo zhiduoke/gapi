@@ -37,6 +37,13 @@ service DemoAPI {
             post: "/sub2"
         };
     }
+
+    rpc RequestBind (RequestBindReq) returns (RequestBindResp) {
+        option (gapi.http) = {
+            post: "/request_bind/:from_params"
+            use:  "mock_ctx"
+        };
+    }
 }
 
 message AddRequest {
@@ -96,4 +103,21 @@ message SubReq2 {
 
 message SubResp2 {
     int32 result = 1;
+}
+
+message RequestBindReq {
+    string from_form = 1 [(gapi.bind) = FROM_DEFAULT];
+    string from_ctx = 2 [(gapi.bind) = FROM_CONTEXT];
+    string from_query = 3 [(gapi.bind) = FROM_QUERY];
+    string from_header = 4 [(gapi.bind) = FROM_HEADER];
+    string from_params = 5 [(gapi.bind) = FROM_PARAMS];
+
+}
+
+message RequestBindResp {
+    string form = 1;
+    string ctx = 2;
+    string query = 3;
+    string header = 4;
+    string params = 5;
 }

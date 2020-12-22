@@ -1,0 +1,81 @@
+
+¤
+
+test.proto	jtop.testproto/annotation.proto"
+Dummy"‰
+	NumberReq
+i32 (Ri32
+i64 (Ri64
+ui32 (Rui32
+ui64 (Rui64
+si32 (Rsi32
+si64 (Rsi64
+float (Rfloat
+double (Rdouble
+fix32	 (Rfix32
+fix64
+ (Rfix64
+sfix32 (Rsfix32
+sfix64 (Rsfix64"3
+	StringReq
+str (	Rstr
+bae64 (Rbae64"%
+BoolReq
+a (Ra
+b (Rb"Ç
+	ObjectReq&
+num (2.jtop.test.NumberReqRnum&
+str (2.jtop.test.StringReqRstr&
+bool (2.jtop.test.BoolReqRbool&
+obj (2.jtop.test.ObjectReqRobj
+a (Ra
+b (Rb"­
+MapReq,
+sms (2.jtop.test.MapReq.SmsEntryRsms,
+smi (2.jtop.test.MapReq.SmiEntryRsmi,
+bms (2.jtop.test.MapReq.BmsEntryRbms,
+smo (2.jtop.test.MapReq.SmoEntryRsmo,
+imo (2.jtop.test.MapReq.ImoEntryRimo,
+sma (2.jtop.test.MapReq.SmaEntryRsma6
+SmsEntry
+key (	Rkey
+value (	Rvalue:86
+SmiEntry
+key (	Rkey
+value (Rvalue:86
+BmsEntry
+key (Rkey
+value (	Rvalue:8L
+SmoEntry
+key (	Rkey*
+value (2.jtop.test.ObjectReqRvalue:8L
+ImoEntry
+key (Rkey*
+value (2.jtop.test.ObjectReqRvalue:8K
+SmaEntry
+key (	Rkey)
+value (2.jtop.test.ArrayReqRvalue:8"Ÿ
+ArrayReq
+nums (Rnums
+strs (	Rstrs
+bools (Rbools(
+objs (2.jtop.test.ObjectReqRobjs+
+mapObjs (2.jtop.test.MapReqRmapObjs2Ñ
+
+TestServerD
+
+TestNumber.jtop.test.NumberReq.jtop.test.Dummy"ÒÓî	
+/numberD
+
+TestString.jtop.test.StringReq.jtop.test.Dummy"ÒÓî	
+/string>
+TestBool.jtop.test.BoolReq.jtop.test.Dummy"ÒÓî
+/boolD
+
+TestObject.jtop.test.ObjectReq.jtop.test.Dummy"ÒÓî	
+/object;
+TestMap.jtop.test.MapReq.jtop.test.Dummy"ÒÓî
+/mapA
+	TestArray.jtop.test.ArrayReq.jtop.test.Dummy"ÒÓî
+/array1Ò÷Ölocalhost:19090â÷Öhttpjsonè÷Öˆ'ò÷Ö/testB
+Ztestdatabproto3
