@@ -1,5 +1,5 @@
 
-¤
+¾
 
 test.proto	jtop.testproto/annotation.proto"
 Dummy"‰
@@ -29,11 +29,10 @@ test.proto	jtop.testproto/annotation.proto"
 bool (2.jtop.test.BoolReqRbool&
 obj (2.jtop.test.ObjectReqRobj
 a (Ra
-b (Rb"­
+b (Rb"Ç
 MapReq,
 sms (2.jtop.test.MapReq.SmsEntryRsms,
 smi (2.jtop.test.MapReq.SmiEntryRsmi,
-bms (2.jtop.test.MapReq.BmsEntryRbms,
 smo (2.jtop.test.MapReq.SmoEntryRsmo,
 imo (2.jtop.test.MapReq.ImoEntryRimo,
 sma (2.jtop.test.MapReq.SmaEntryRsma6
@@ -42,10 +41,7 @@ test.proto	jtop.testproto/annotation.proto"
 value (	Rvalue:86
 SmiEntry
 key (	Rkey
-value (Rvalue:86
-BmsEntry
-key (Rkey
-value (	Rvalue:8L
+value (Rvalue:8L
 SmoEntry
 key (	Rkey*
 value (2.jtop.test.ObjectReqRvalue:8L

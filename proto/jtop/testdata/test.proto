@@ -84,7 +84,6 @@ message ObjectReq {
 message MapReq {
     map<string, string> sms = 1;
     map<string, int32> smi = 2;
-    map<bool, string> bms = 3;
     map<string, ObjectReq> smo = 4;
     map<int32, ObjectReq> imo = 5;
     map<string, ArrayReq> sma = 6;

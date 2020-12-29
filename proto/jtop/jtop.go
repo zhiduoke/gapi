@@ -113,7 +113,7 @@ func (e *Encoder) transBool(token *Token, field *metadata.Field) {
 		return
 	}
 	wire, pv, ok := e.parseNumber(token, field)
-	if !ok {
+	if !ok || pv == 0 {
 		return
 	}
 	e.encodeKey(field.Tag, wire)
@@ -134,7 +134,7 @@ func (e *Encoder) transNull(token *Token, field *metadata.Field) {
 
 func (e *Encoder) transNumber(token *Token, field *metadata.Field) {
 	wire, pv, ok := e.parseNumber(token, field)
-	if !ok {
+	if !ok || pv == 0 {
 		return
 	}
 	e.encodeKey(field.Tag, wire)
@@ -142,6 +142,9 @@ func (e *Encoder) transNumber(token *Token, field *metadata.Field) {
 }
 
 func (e *Encoder) transString(token *Token, field *metadata.Field) {
+	if len(token.Value) == 2 {
+		return
+	}
 	var pv []byte
 	switch field.Kind {
 	case metadata.StringKind:
@@ -291,6 +294,10 @@ func (e *Encoder) packNumeric(_ *Token, field *metadata.Field) {
 			return
 		}
 		packEnc.encodeWire(wire, pv)
+	}
+	if len(packEnc.buf.Bytes()) == 0 {
+		putEncoder(packEnc)
+		return
 	}
 	e.encodeBytes(field.Tag, packEnc.buf.Bytes())
 	putEncoder(packEnc)
