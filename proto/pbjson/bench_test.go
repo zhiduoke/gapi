@@ -1,7 +1,7 @@
 package pbjson
 
 import (
-	"gapi/metadata"
+	"github.com/zhiduoke/gapi/metadata"
 	"testing"
 )
 
