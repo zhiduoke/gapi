@@ -5,6 +5,7 @@ import (
 	"github.com/golang/protobuf/proto"
 	"github.com/zhiduoke/gapi/metadata"
 	"github.com/zhiduoke/gapi/proto/jtop/testdata"
+	"github.com/zhiduoke/gapi/proto/jtop/testdata/noomitzero"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"reflect"
 	"testing"
@@ -71,7 +72,74 @@ func TestEncode(t *testing.T) {
 			t.Errorf("proto marshal error: %s\n", err)
 			return
 		}
-		if !reflect.DeepEqual(r, r1) {
+		if !reflect.DeepEqual(r, r1) && !(len(r) == 0 && len(r1) == 0) {
+			diffbytes(t, r, r1)
+			t.Errorf("protobuf not equal\n")
+			return
+		}
+		t.Logf("pass!\n")
+	}
+}
+
+func TestEncodeZeroValue(t *testing.T) {
+	type TestCase struct {
+		name string
+		in   interface{}
+		msg  *metadata.Message
+	}
+
+	cases := [...]TestCase{
+		{
+			name: "number",
+			in:   &numberReqNoOmit,
+			msg:  testdata.TestMessages[".jtop.test.NumberReq"],
+		},
+		{
+			name: "string",
+			in:   &stringReqNoOmit,
+			msg:  testdata.TestMessages[".jtop.test.StringReq"],
+		},
+		{
+			name: "bool",
+			in:   &boolReqNoOmit,
+			msg:  testdata.TestMessages[".jtop.test.BoolReq"],
+		},
+		{
+			name: "object",
+			in:   &objectReqNoOmit,
+			msg:  testdata.TestMessages[".jtop.test.ObjectReq"],
+		},
+		{
+			name: "array",
+			in:   &arrayReqNoOmit,
+			msg:  testdata.TestMessages[".jtop.test.ArrayReq"],
+		},
+		{
+			name: "map",
+			in:   &mapReq1NoOmit,
+			msg:  testdata.TestMessages[".jtop.test.MapReq"],
+		},
+	}
+	for _, c := range cases {
+		t.Logf("test %s\n", c.name)
+		jsonData, err := json.Marshal(c.in)
+		if err != nil {
+			t.Log(err)
+			return
+		}
+		//t.Logf("json: %s\n", jsonData)
+		r, err := Encode(c.msg, jsonData)
+		if err != nil {
+			t.Errorf("encode error: %s\n", err)
+			return
+		}
+		r1, err := proto.Marshal(proto.MessageV1(c.in.(protoreflecter).ProtoReflect()))
+		if err != nil {
+			t.Errorf("proto marshal error: %s\n", err)
+			return
+		}
+
+		if !reflect.DeepEqual(r, r1) && !(len(r) == 0 && len(r1) == 0) {
 			diffbytes(t, r, r1)
 			t.Errorf("protobuf not equal\n")
 			return
@@ -177,4 +245,72 @@ var mapReq1 = testdata.MapReq{
 	Smo: map[string]*testdata.ObjectReq{"obj0": &objectReq},
 	//Imo: map[int32]*testdata.ObjectReq{0: &objectReq, 1: &objectReq1},
 	Sma: map[string]*testdata.ArrayReq{"a": &arrayReq},
+}
+
+var numberReqNoOmit = noomitzero.NumberReq{
+	I32:    0,
+	I64:    -64,
+	Ui32:   32,
+	Ui64:   64,
+	Si32:   -32,
+	Si64:   -64,
+	Float:  66.66,
+	Double: -66.66,
+	Fix32:  32,
+	Fix64:  64,
+	Sfix32: -32,
+	Sfix64: -64,
+}
+
+var boolReqNoOmit = noomitzero.BoolReq{
+	A: true,
+	B: false,
+}
+
+var stringReqNoOmit = noomitzero.StringReq{
+	Str:   "",
+	Bae64: nil,
+}
+
+var objectReq1NoOmit = noomitzero.ObjectReq{
+	Num:  &numberReqNoOmit,
+	Str:  &stringReqNoOmit,
+	Bool: &boolReqNoOmit,
+	Obj:  nil,
+	A:    200,
+	B:    false,
+}
+
+var objectReqNoOmit = noomitzero.ObjectReq{
+	Num:  &numberReqNoOmit,
+	Str:  &stringReqNoOmit,
+	Bool: &boolReqNoOmit,
+	Obj:  &objectReq1NoOmit,
+	A:    100,
+	B:    true,
+}
+
+var arrayReqNoOmit = noomitzero.ArrayReq{
+	Nums:  []int32{},
+	Strs:  []string{},
+	Bools: []bool{},
+	Objs:  []*noomitzero.ObjectReq{&objectReqNoOmit, &objectReq1NoOmit, &objectReq1NoOmit},
+}
+
+var mapReqNoOmit = noomitzero.MapReq{
+	Sms: map[string]string{"a": "1a", "b": "2b"},
+	Smi: map[string]int32{"1": 1, "2": 2},
+	//Bms: map[bool]string{true: "true", false: "false"},
+	Smo: map[string]*noomitzero.ObjectReq{"obj0": &objectReqNoOmit, "obj1": &objectReq1NoOmit},
+	//Imo: map[int32]*noomit.ObjectReq{0: &objectReq, 1: &objectReq1},
+	Sma: map[string]*noomitzero.ArrayReq{"a": &arrayReqNoOmit, "b": &arrayReqNoOmit},
+}
+
+var mapReq1NoOmit = noomitzero.MapReq{
+	Sms: map[string]string{"a": "1a"},
+	Smi: map[string]int32{"1": 1},
+	//Bms: map[bool]string{true: "true", false: "false"},
+	Smo: map[string]*noomitzero.ObjectReq{"obj0": &objectReqNoOmit},
+	//Imo: map[int32]*noomit.ObjectReq{0: &objectReq, 1: &objectReq1},
+	Sma: map[string]*noomitzero.ArrayReq{"a": &arrayReqNoOmit},
 }
