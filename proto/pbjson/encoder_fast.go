@@ -62,7 +62,7 @@ func (e *Encoder) EncodeMessageFast(msg *metadata.Message, data []byte) {
 	closeChar := byte(0)
 	more := false
 	more1 := false
-	pb := newProtoBuffer(data)
+	pb := proto.NewBuffer(data)
 	//noinspection GoNilness
 	for {
 		key, err := pb.DecodeVarint()
@@ -146,9 +146,8 @@ func (e *Encoder) EncodeMessageFast(msg *metadata.Message, data []byte) {
 			}
 			if curField.Kind == metadata.MapKind {
 				var entry [2]fieldValue
-				pb := newProtoBuffer(buf)
+				pb := proto.NewBuffer(buf)
 				e.decodeEntry(pb, &entry)
-				putProtoBuffer(pb)
 				if e.err != nil {
 					break
 				}
@@ -179,7 +178,6 @@ func (e *Encoder) EncodeMessageFast(msg *metadata.Message, data []byte) {
 			break
 		}
 	}
-	putProtoBuffer(pb)
 	if e.err != nil {
 		return
 	}
