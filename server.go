@@ -107,12 +107,15 @@ func (s *Server) UpdateRoute(md *metadata.Metadata) error {
 			return fmt.Errorf("no such handler: %s", route.Call.Handler)
 		}
 		// reuse existed connection
-		client := old[route.Call.Server]
+		client := clients[route.Call.Server]
 		if client == nil {
-			var err error
-			client, err = dial(route.Call.Server)
-			if err != nil {
-				return err
+			client = old[route.Call.Server]
+			if client == nil {
+				var err error
+				client, err = dial(route.Call.Server)
+				if err != nil {
+					return err
+				}
 			}
 		}
 		clients[route.Call.Server] = client
