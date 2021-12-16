@@ -4,7 +4,7 @@
 // 	protoc        v3.9.1
 // source: test.proto
 
-package testdata
+package noomitzero
 
 import (
 	proto "github.com/golang/protobuf/proto"
@@ -69,18 +69,18 @@ type NumberReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	I32    int32   `protobuf:"varint,1,opt,name=i32,proto3" json:"i32,omitempty"`
-	I64    int64   `protobuf:"varint,2,opt,name=i64,proto3" json:"i64,omitempty"`
-	Ui32   uint32  `protobuf:"varint,3,opt,name=ui32,proto3" json:"ui32,omitempty"`
-	Ui64   uint64  `protobuf:"varint,4,opt,name=ui64,proto3" json:"ui64,omitempty"`
-	Si32   int32   `protobuf:"zigzag32,5,opt,name=si32,proto3" json:"si32,omitempty"`
-	Si64   int64   `protobuf:"zigzag64,6,opt,name=si64,proto3" json:"si64,omitempty"`
-	Float  float32 `protobuf:"fixed32,7,opt,name=float,proto3" json:"float,omitempty"`
-	Double float64 `protobuf:"fixed64,8,opt,name=double,proto3" json:"double,omitempty"`
-	Fix32  uint32  `protobuf:"fixed32,9,opt,name=fix32,proto3" json:"fix32,omitempty"`
-	Fix64  uint64  `protobuf:"fixed64,10,opt,name=fix64,proto3" json:"fix64,omitempty"`
-	Sfix32 int32   `protobuf:"fixed32,11,opt,name=sfix32,proto3" json:"sfix32,omitempty"`
-	Sfix64 int64   `protobuf:"fixed64,12,opt,name=sfix64,proto3" json:"sfix64,omitempty"`
+	I32    int32   `protobuf:"varint,1,opt,name=i32,proto3" json:"i32"`
+	I64    int64   `protobuf:"varint,2,opt,name=i64,proto3" json:"i64"`
+	Ui32   uint32  `protobuf:"varint,3,opt,name=ui32,proto3" json:"ui32"`
+	Ui64   uint64  `protobuf:"varint,4,opt,name=ui64,proto3" json:"ui64"`
+	Si32   int32   `protobuf:"zigzag32,5,opt,name=si32,proto3" json:"si32"`
+	Si64   int64   `protobuf:"zigzag64,6,opt,name=si64,proto3" json:"si64"`
+	Float  float32 `protobuf:"fixed32,7,opt,name=float,proto3" json:"float"`
+	Double float64 `protobuf:"fixed64,8,opt,name=double,proto3" json:"double"`
+	Fix32  uint32  `protobuf:"fixed32,9,opt,name=fix32,proto3" json:"fix32"`
+	Fix64  uint64  `protobuf:"fixed64,10,opt,name=fix64,proto3" json:"fix64"`
+	Sfix32 int32   `protobuf:"fixed32,11,opt,name=sfix32,proto3" json:"sfix32"`
+	Sfix64 int64   `protobuf:"fixed64,12,opt,name=sfix64,proto3" json:"sfix64"`
 }
 
 func (x *NumberReq) Reset() {
@@ -204,8 +204,8 @@ type StringReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Str   string `protobuf:"bytes,1,opt,name=str,proto3" json:"str,omitempty"`
-	Bae64 []byte `protobuf:"bytes,2,opt,name=bae64,proto3" json:"bae64,omitempty"`
+	Str   string `protobuf:"bytes,1,opt,name=str,proto3" json:"str"`
+	Bae64 []byte `protobuf:"bytes,2,opt,name=bae64,proto3" json:"bae64"`
 }
 
 func (x *StringReq) Reset() {
@@ -259,8 +259,8 @@ type BoolReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	A bool `protobuf:"varint,1,opt,name=a,proto3" json:"a,omitempty"`
-	B bool `protobuf:"varint,2,opt,name=b,proto3" json:"b,omitempty"`
+	A bool `protobuf:"varint,1,opt,name=a,proto3" json:"a"`
+	B bool `protobuf:"varint,2,opt,name=b,proto3" json:"b"`
 }
 
 func (x *BoolReq) Reset() {
@@ -314,12 +314,12 @@ type ObjectReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Num  *NumberReq `protobuf:"bytes,1,opt,name=num,proto3" json:"num,omitempty"`
-	Str  *StringReq `protobuf:"bytes,2,opt,name=str,proto3" json:"str,omitempty"`
-	Bool *BoolReq   `protobuf:"bytes,3,opt,name=bool,proto3" json:"bool,omitempty"`
-	Obj  *ObjectReq `protobuf:"bytes,4,opt,name=obj,proto3" json:"obj,omitempty"`
-	A    int32      `protobuf:"varint,5,opt,name=a,proto3" json:"a,omitempty"`
-	B    bool       `protobuf:"varint,6,opt,name=b,proto3" json:"b,omitempty"`
+	Num  *NumberReq `protobuf:"bytes,1,opt,name=num,proto3" json:"num"`
+	Str  *StringReq `protobuf:"bytes,2,opt,name=str,proto3" json:"str"`
+	Bool *BoolReq   `protobuf:"bytes,3,opt,name=bool,proto3" json:"bool"`
+	Obj  *ObjectReq `protobuf:"bytes,4,opt,name=obj,proto3" json:"obj"`
+	A    int32      `protobuf:"varint,5,opt,name=a,proto3" json:"a"`
+	B    bool       `protobuf:"varint,6,opt,name=b,proto3" json:"b"`
 }
 
 func (x *ObjectReq) Reset() {
@@ -401,11 +401,11 @@ type MapReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Sms map[string]string     `protobuf:"bytes,1,rep,name=sms,proto3" json:"sms,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	Smi map[string]int32      `protobuf:"bytes,2,rep,name=smi,proto3" json:"smi,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
-	Smo map[string]*ObjectReq `protobuf:"bytes,4,rep,name=smo,proto3" json:"smo,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	Imo map[int32]*ObjectReq  `protobuf:"bytes,5,rep,name=imo,proto3" json:"imo,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	Sma map[string]*ArrayReq  `protobuf:"bytes,6,rep,name=sma,proto3" json:"sma,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Sms map[string]string     `protobuf:"bytes,1,rep,name=sms,proto3" json:"sms" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Smi map[string]int32      `protobuf:"bytes,2,rep,name=smi,proto3" json:"smi" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
+	Smo map[string]*ObjectReq `protobuf:"bytes,4,rep,name=smo,proto3" json:"smo" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Imo map[int32]*ObjectReq  `protobuf:"bytes,5,rep,name=imo,proto3" json:"imo" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Sma map[string]*ArrayReq  `protobuf:"bytes,6,rep,name=sma,proto3" json:"sma" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 }
 
 func (x *MapReq) Reset() {
@@ -480,11 +480,11 @@ type ArrayReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Nums    []int32      `protobuf:"varint,1,rep,packed,name=nums,proto3" json:"nums,omitempty"`
-	Strs    []string     `protobuf:"bytes,2,rep,name=strs,proto3" json:"strs,omitempty"`
-	Bools   []bool       `protobuf:"varint,3,rep,packed,name=bools,proto3" json:"bools,omitempty"`
-	Objs    []*ObjectReq `protobuf:"bytes,4,rep,name=objs,proto3" json:"objs,omitempty"`
-	MapObjs []*MapReq    `protobuf:"bytes,5,rep,name=mapObjs,proto3" json:"mapObjs,omitempty"`
+	Nums    []int32      `protobuf:"varint,1,rep,packed,name=nums,proto3" json:"nums"`
+	Strs    []string     `protobuf:"bytes,2,rep,name=strs,proto3" json:"strs"`
+	Bools   []bool       `protobuf:"varint,3,rep,packed,name=bools,proto3" json:"bools"`
+	Objs    []*ObjectReq `protobuf:"bytes,4,rep,name=objs,proto3" json:"objs"`
+	MapObjs []*MapReq    `protobuf:"bytes,5,rep,name=mapObjs,proto3" json:"mapObjs"`
 }
 
 func (x *ArrayReq) Reset() {
